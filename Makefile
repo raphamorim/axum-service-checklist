@@ -1,8 +1,8 @@
 prog :=service
-
 debug ?=
-
 $(info DEBUG: $(debug))
+
+.PHONY: dynamodb
 
 ifdef debug
 	release :=
@@ -28,6 +28,12 @@ dev:
 
 install:
 	cp target/$(target)/$(prog) ~/bin/$(prog)-$(extension)
+
+dynamodb:
+	java -Djava.library.path=./dynamodb/DynamoDBLocal_lib -jar ./dynamodb/DynamoDBLocal.jar -sharedDb
+
+install-dynamodb:
+	sh ./install_local_dynamodb.sh
 
 all: build install
  

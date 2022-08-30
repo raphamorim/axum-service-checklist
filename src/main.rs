@@ -1,17 +1,35 @@
-/// Use axum capabities.
 use axum::routing::get;
 use axum::handler::Handler;
+use axum_tracing_opentelemetry::opentelemetry_tracing_layer;
+use tracing_subscriber::{filter::EnvFilter, layer::SubscriberExt};
 
-use tracing_subscriber::{
-    layer::SubscriberExt,
-    util::SubscriberInitExt,
-};
+fn init_tracing() {
+    use axum_tracing_opentelemetry::{make_resource, otlp};
+    use tracing_subscriber::fmt::format::FmtSpan;
+    std::env::set_var(
+        "RUST_LOG",
+        std::env::var("RUST_LOG").unwrap_or("INFO".to_string()),
+    );
+
+    let otel_rsrc = make_resource(env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"));
+    let otel_tracer = otlp::init_tracer(otel_rsrc, otlp::identity).expect("setup of Tracer");
+    let otel_layer = tracing_opentelemetry::layer().with_tracer(otel_tracer);
+
+    let fmt_layer = tracing_subscriber::fmt::layer()
+        .json()
+        .with_timer(tracing_subscriber::fmt::time::uptime())
+        .with_span_events(FmtSpan::NEW | FmtSpan::CLOSE);
+
+    let subscriber = tracing_subscriber::registry()
+        .with(fmt_layer)
+        .with(EnvFilter::from_default_env())
+        .with(otel_layer);
+    tracing::subscriber::set_global_default(subscriber).unwrap();
+}
 
 #[tokio::main]
 async fn main() {
-    tracing_subscriber::registry()
-    .with(tracing_subscriber::fmt::layer())
-    .init();
+    init_tracing();
 
     // Build our application by creating our router.
     let app = axum::Router::new()
@@ -20,7 +38,8 @@ async fn main() {
         )
         .route("/healthcheck",
             get(healthcheck)
-        );
+        )
+        .layer(opentelemetry_tracing_layer());
 
     // Run our application as a hyper server on http://localhost:3000.
     axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
@@ -54,7 +73,7 @@ async fn shutdown_signal() {
         _ = terminate => {},
     }
 
-    println!("signal shutdown");
+    trac!("signal shutdown");
 }
 
 pub async fn fallback(
