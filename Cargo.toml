@@ -7,33 +7,20 @@ rust-version = "1.62.1"
 license = "MPL-2.0"
 
 [dependencies]
-axum = "0.5"
-hyper = { version = "0.14.20", features = ["full"] }
-tokio = { version = "1.20.1", features = ["full"] }
-serde = { version = "1.0.137", features = ["derive"] }
-serde_json = "1.0.81"
-serde_with = "1.14.0"
-assert-json-diff = "2.0.1"
-regex = "1"
-chrono= "0.4.19"
-uuid = { version = "1.1.2", features = ["v4"] }
-
-# AWS
-aws-sdk-dynamodb = "0.16.0"
-aws-config = "0.46.0"
-aws-types = "0.46.0"
-
-# Tracing and OTEL
-tracing = "0.1.35"
-tracing-opentelemetry = "0.17"
-http = "0.2.8"
-tower = "0.4.13"
-tower-http = { version = "0.3", features = ["trace"] }
-axum-tracing-opentelemetry = { version = "0.4", features = ["otlp"] }
-opentelemetry-otlp = { version = "0.10" }
-tracing-subscriber = { version = "0.3", features = [
-  "env-filter",
-  "fmt",
-  "json",
-] }
-opentelemetry = { version = "0.17", features = ["rt-tokio", "serialize"] }
+axum = "0.5.4"
+# A fast and correct HTTP library.
+hyper = { version = "0.14.17", features = ["full"] }
+# Event-driven, non-blocking I/O platform.
+tokio = { version = "1.17.0", features = ["full"] }
+# Modular reusable components for building robust clients and servers.
+tower = "0.4.12"
+# A serialization/deserialization framework.
+serde = { version = "1.0.136", features = ["derive"] }
+# Serde serializion/deserialization of JSON data.
+serde_json = "1.0.79"
+# Types for HTTP requests and responses.
+http = "0.2.6"
+# Application-level tracing for Rust.
+tracing = "0.1.32"
+# Utilities for implementing and composing `tracing` subscribers.
+tracing-subscriber = { version = "0.3.9", features = ["env-filter"] }

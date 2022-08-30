@@ -1,4 +1,4 @@
-FROM rust:1.59 as builder
+FROM rust:1.62.1 as builder
 
 RUN USER=root cargo new --bin service
 WORKDIR ./service
