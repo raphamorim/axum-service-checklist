@@ -1,28 +1,56 @@
 use axum::handler::Handler;
+use axum::response::{Html, IntoResponse};
 use axum::routing::get;
+use axum::Router;
 use std::net::SocketAddr;
 
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 #[tokio::main]
 async fn main() {
-    tracing_subscriber::registry()
-        .with(tracing_subscriber::fmt::layer())
-        .init();
+    let frontend = async {
+        let app = Router::new().route("/", get(html));
+        let addr = SocketAddr::from(([127, 0, 0, 1], 4000));
+        axum::Server::bind(&addr)
+            .serve(app.into_make_service())
+            .with_graceful_shutdown(shutdown_signal())
+            .await
+            .unwrap();
+    };
 
-    // Build our application by creating our router.
-    let app = axum::Router::new()
-        .fallback(fallback.into_service())
-        .route("/healthcheck", get(healthcheck));
+    let backend = async {
+        tracing_subscriber::registry()
+            .with(tracing_subscriber::fmt::layer())
+            .init();
 
-    tracing::info!("listening on 3000");
+        // Build our application by creating our router.
+        let app = axum::Router::new()
+            .fallback(fallback.into_service())
+            .route("/healthcheck", get(healthcheck));
 
-    // Run our application as a hyper server on http://localhost:3000.
-    axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
-        .serve(app.into_make_service_with_connect_info::<SocketAddr>())
-        .with_graceful_shutdown(shutdown_signal())
-        .await
-        .unwrap();
+        tracing::info!("listening on 3000");
+
+        // Run our application as a hyper server on http://localhost:3000.
+        axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
+            .serve(app.into_make_service_with_connect_info::<SocketAddr>())
+            .with_graceful_shutdown(shutdown_signal())
+            .await
+            .unwrap();
+    };
+
+    tokio::join!(frontend, backend);
+}
+
+async fn html() -> impl IntoResponse {
+    Html(
+        r#"
+        <script>
+            fetch('http://localhost:3000/user')
+              .then(response => response.json())
+              .then(data => console.log(data));
+        </script>
+        "#,
+    )
 }
 
 /// Tokio signal handler that will wait for a user to press CTRL+C or for kill/terminate signal.

@@ -13,12 +13,7 @@ async fn test_get_user_data() {
     let routes = Router::new().route("/random", get(healthcheck));
 
     let response = routes
-        .oneshot(
-            Request::builder()
-                .uri("/user")
-                .body(Body::empty())
-                .unwrap(),
-        )
+        .oneshot(Request::builder().uri("/user").body(Body::empty()).unwrap())
         .await
         .unwrap();
 
@@ -41,12 +36,7 @@ async fn test_get_dog() {
     let routes = Router::new().route("/random", get(healthcheck));
 
     let response = routes
-        .oneshot(
-            Request::builder()
-                .uri("/dog")
-                .body(Body::empty())
-                .unwrap(),
-        )
+        .oneshot(Request::builder().uri("/dog").body(Body::empty()).unwrap())
         .await
         .unwrap();
 

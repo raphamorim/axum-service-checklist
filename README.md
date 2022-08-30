@@ -1,11 +1,16 @@
-# Rust service template
+# Axum service checklist
 
 ## Checklist
 
+- [ ] Create a hello word route on GET:`/hello-word` and write tests for it. Check out the `src/test.rs` file.
 
 - [ ] Serve static files by serving the folder `resources`. Should be able to access `http://localhost:3000/static/great-wave.jpg` and return the image file:
 
 ![Demo great wave](resources/demo.png)
+
+- [ ] Fix the CORS issue on the frontend (http://localhost:4000).
+
+![Cors](resources/cors.png)
 
 - [ ] Implement a route GET:`/user` that parses a local JSON file `user.json` and returns a response with content-type "application/json" and with the body as:
 
@@ -26,7 +31,7 @@
 }
 ```
 
-
+- [ ] Create a middleware to check if exist a cookie
 
 ## Working with repo
 
@@ -44,5 +49,3 @@ Builds a Docker image for the service.
 #### `make test`
 
 Runs all the test suits: API, integration and unit tests.
-
-## Checklist
