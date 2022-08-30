@@ -12,6 +12,10 @@
 
 ![Cors](resources/cors.png)
 
+- [ ] Create a middleware to extend the headers and add a new header with a key as "animal" and value as random value between: "dog", "cat", "monkey" and "sloth".
+
+![Headers](resources/headers.png)
+
 - [ ] Implement a route GET:`/user` that parses a local JSON file `user.json` and returns a response with content-type "application/json" and with the body as:
 
 ```json
@@ -31,7 +35,12 @@
 }
 ```
 
-- [ ] Create a middleware to check if exist a cookie
+- [ ] Implement a route GET:`/dog?download=true` that makes a request to https://dog.ceo/api/breeds/image/random , parses the response and download the image to the resources folder and return the path in the response body, example:
+
+
+```json
+"http://localhost:3000/static/n02105162_299.jpg"
+```
 
 ## Working with repo
 
