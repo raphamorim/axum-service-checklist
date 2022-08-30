@@ -12,6 +12,10 @@ else
 	extension :=
 endif
 
+lint:
+	cargo fmt -- --check --color always
+	cargo clippy --all-targets -- -D warnings
+
 build:
 	cargo build $(release)
 

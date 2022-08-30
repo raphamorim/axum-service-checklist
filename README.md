@@ -1,6 +1,13 @@
 # Axum service checklist
 
+```bash
+make build debug=1 # cargo build
+make build # cargo build --release
+```
+
 ## Checklist
+
+First step is uncommenting the tests in the workflows, check out `.github/workflows/ci.yml`.
 
 - [ ] Create a hello word route on GET:`/hello-word` and write tests for it. Check out the `src/test.rs` file.
 

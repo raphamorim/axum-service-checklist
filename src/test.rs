@@ -50,5 +50,5 @@ async fn test_get_dog() {
     let body: Value = serde_json::from_slice(&body).unwrap();
     let dog = body["dog"].to_string();
 
-    assert_eq!(dog.contains("images.dog.ceo"), true);
+    assert!(dog.contains("images.dog.ceo"), "{}", true);
 }
