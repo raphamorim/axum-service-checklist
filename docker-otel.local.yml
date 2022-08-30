@@ -1,0 +1,27 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+        cors_allowed_origins:
+        - "*"
+
+processors:
+  batch:
+
+exporters:
+  logging:
+    logLevel: debug
+#   TODO: Implement otlp integration
+#   otlp:
+#     endpoint: "api.honeycomb.io:443"
+#     headers:
+#       "x-honeycomb-team": "HONEYCOMB-API-KEY-GOES-HERE"
+#       "x-honeycomb-dataset": "DATASET-NAME-GOES-HERE"
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [logging]

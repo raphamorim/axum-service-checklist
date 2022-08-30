@@ -1,3 +1,4 @@
+use std::{env, net::SocketAddr};
 use axum::routing::get;
 use axum::handler::Handler;
 use axum_tracing_opentelemetry::opentelemetry_tracing_layer;
@@ -41,9 +42,11 @@ async fn main() {
         )
         .layer(opentelemetry_tracing_layer());
 
+    tracing::info!("listening on 3000");
+
     // Run our application as a hyper server on http://localhost:3000.
     axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
-        .serve(app.into_make_service())
+        .serve(app.into_make_service_with_connect_info::<SocketAddr>())
         .with_graceful_shutdown(shutdown_signal())
         .await
         .unwrap();
@@ -57,8 +60,7 @@ async fn shutdown_signal() {
             .expect("Expect shutdown CTRL+C handler");
     };
 
-    #[cfg(unix)] /* conditional compilation depending on target family = unix */
-    let terminate = async {
+    #[cfg(unix)] /* conditional compilation depending on target family = unix */ let terminate = async {
         tokio::signal::unix::signal(tokio::signal::unix::SignalKind::terminate())
             .expect("Expected shutdown signal handler")
             .recv()
@@ -73,7 +75,8 @@ async fn shutdown_signal() {
         _ = terminate => {},
     }
 
-    trac!("signal shutdown");
+    tracing::warn!("signal received, starting graceful shutdown");
+    opentelemetry::global::shutdown_tracer_provider();
 }
 
 pub async fn fallback(
