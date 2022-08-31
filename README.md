@@ -9,7 +9,11 @@ make build # cargo build --release
 
 First step is uncommenting the tests in the workflows, check out `.github/workflows/ci.yml`.
 
-- [ ] Create a hello word route on GET:`/hello-word` and write tests for it. Check out the `src/test.rs` file.
+- [ ] Create a hello word route on GET:`/hello-word` and write tests for it. Check out the `src/test.rs` file. It should return simply:
+
+```
+hello world
+```
 
 - [ ] Serve static files by serving the folder `resources`. Should be able to access `http://localhost:3000/static/great-wave.jpg` and return the image file:
 
