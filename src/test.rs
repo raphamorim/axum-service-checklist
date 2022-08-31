@@ -9,6 +9,11 @@ use serde_json::Value;
 use tower::ServiceExt;
 
 #[tokio::test]
+async fn test_healthcheck_handler() {
+    assert_eq!(healthcheck().await, "OK");
+}
+
+#[tokio::test]
 async fn test_get_user_data() {
     let routes = Router::new().route("/random", get(healthcheck));
 

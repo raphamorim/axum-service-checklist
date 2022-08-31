@@ -33,6 +33,23 @@ First step is uncommenting the tests in the workflows, check out `.github/workfl
 }
 ```
 
+- [ ] Implement a route GET:`/users` that parses a local JSON file `users.json` and returns a response with content-type "application/json" and with the body as:
+
+```json
+[
+	{
+		"name": "Emil",
+		"age": 7,
+		"email": "emil@viaplaygroup.com"
+	},
+	{
+		"name": "Pipi",
+		"age": 7,
+		"email": "pipi@viaplaygroup.com"
+	}
+]
+```
+
 - [ ] Implement a route GET:`/dog` that makes a request to https://dog.ceo/api/breeds/image/random , parses the response and return the property `message` as:
 
 
@@ -46,7 +63,9 @@ First step is uncommenting the tests in the workflows, check out `.github/workfl
 
 
 ```json
-"http://localhost:3000/static/n02105162_299.jpg"
+{
+	"dog": "http://localhost:3000/static/malinois/n02105162_299.jpg"
+}
 ```
 
 ## Working with repo
